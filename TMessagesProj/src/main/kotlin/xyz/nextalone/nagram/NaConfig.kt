@@ -843,12 +843,6 @@ object NaConfig {
             ConfigItem.configTypeBool,
             true
         )
-    val coloredAdminTitle =
-        addConfig(
-            "ColoredAdminTitle",
-            ConfigItem.configTypeBool,
-            false
-        )
     val hideReactions =
         addConfig(
             "HideReactions",
