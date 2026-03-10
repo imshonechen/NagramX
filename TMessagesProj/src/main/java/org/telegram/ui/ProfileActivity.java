@@ -3746,7 +3746,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
             @Override
             protected boolean isStoriesView() {
-                return myProfile;
+                return myProfile && !NaConfig.INSTANCE.getDisableStories().Bool();
             }
 
             @Override
