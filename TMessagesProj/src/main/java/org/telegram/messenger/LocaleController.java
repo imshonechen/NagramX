@@ -1330,6 +1330,11 @@ public class LocaleController {
             } else {
                 newLocale = new Locale(args[0], args[1]);
             }
+            if ("zh".equals(newLocale.getLanguage()) && newLocale.getCountry().isEmpty() && localeInfo.shortName != null) {
+                if (localeInfo.shortName.startsWith("zh_hant") || localeInfo.shortName.contains("taiwan")) {
+                    newLocale = new Locale("zh", "TW");
+                }
+            }
             if (override) {
                 languageOverride = localeInfo.shortName;
 
@@ -3159,6 +3164,11 @@ public class LocaleController {
                             newLocale = new Locale(args[0]);
                         } else {
                             newLocale = new Locale(args[0], args[1]);
+                        }
+                        if ("zh".equals(newLocale.getLanguage()) && newLocale.getCountry().isEmpty() && localeInfo.shortName != null) {
+                            if (localeInfo.shortName.startsWith("zh_hant") || localeInfo.shortName.contains("taiwan")) {
+                                newLocale = new Locale("zh", "TW");
+                            }
                         }
                         languageOverride = localeInfo.shortName;
 
