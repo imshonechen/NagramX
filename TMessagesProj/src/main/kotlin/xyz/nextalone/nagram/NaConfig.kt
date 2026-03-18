@@ -1215,6 +1215,12 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
+    val strokeOnViews =
+        addConfig(
+            "StrokeOnViews",
+            ConfigItem.configTypeBool,
+            true
+        )
 
     val preferredTranslateTargetLangList = ArrayList<String>()
     fun updatePreferredTranslateTargetLangList() {
