@@ -15485,6 +15485,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         public boolean isSearchWas() {
             return searchWas;
         }
+
+        public boolean hasRecentSearches() {
+            return !recentSearches.isEmpty();
+        }
     }
 
     private void openUrl(String url, Browser.Progress progress) {
