@@ -12369,7 +12369,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         } else {
                             if (NekoConfig.ignoreBlocked.Bool()) {
                                 boolean customFiltered = AyuFilter.getCustomFilteredUsersList().contains(userId);
-                                otherItem.addSubItem(shadow_ban, customFiltered ? R.drawable.msg_block : R.drawable.msg_block2, getString(customFiltered ? R.string.UnshadowBan : R.string.ShadowBan));
+                                otherItem.addSubItem(shadow_ban, R.drawable.hide_title, getString(customFiltered ? R.string.UnshadowBan : R.string.ShadowBan));
                             }
                             otherItem.addSubItem(block_contact, !userBlocked ? R.drawable.msg_block : R.drawable.msg_block, !userBlocked ? LocaleController.getString(R.string.BlockContact) : LocaleController.getString(R.string.Unblock));
                         }
@@ -12386,7 +12386,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                     if (NekoConfig.ignoreBlocked.Bool()) {
                         boolean customFiltered = AyuFilter.getCustomFilteredUsersList().contains(userId);
-                        otherItem.addSubItem(shadow_ban, customFiltered ? R.drawable.msg_block : R.drawable.msg_block2, getString(customFiltered ? R.string.UnshadowBan : R.string.ShadowBan));
+                        otherItem.addSubItem(shadow_ban, R.drawable.hide_title, getString(customFiltered ? R.string.UnshadowBan : R.string.ShadowBan));
                     }
                     otherItem.addSubItem(block_contact, !userBlocked ? R.drawable.msg_block : R.drawable.msg_block, !userBlocked ? LocaleController.getString(R.string.BlockContact) : LocaleController.getString(R.string.Unblock));
                     otherItem.addSubItem(edit_contact, R.drawable.msg_edit, LocaleController.getString(R.string.EditContact));
