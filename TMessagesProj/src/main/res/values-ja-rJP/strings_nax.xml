@@ -323,4 +323,5 @@
     <string name="PasscodeShowMessagePreviewWhenLockedAbout">パスコードロックが有効な場合でも通知内容を表示します。</string>
     <string name="StickerSavedHint">ステッカーを保存しました。</string>
     <string name="StickerCopied">ステッカーをコピーしました。</string>
+    <string name="StrokeOnViews">グレア効果</string>
 </resources>

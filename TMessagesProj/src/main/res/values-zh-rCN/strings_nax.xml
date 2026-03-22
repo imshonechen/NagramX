@@ -323,4 +323,5 @@
     <string name="PasscodeShowMessagePreviewWhenLockedAbout">在密码锁启用时不再隐藏通知内容。</string>
     <string name="StickerSavedHint">贴纸已保存到相册。</string>
     <string name="StickerCopied">贴纸已复制到剪贴板。</string>
+    <string name="StrokeOnViews">眩光效果</string>
 </resources>
