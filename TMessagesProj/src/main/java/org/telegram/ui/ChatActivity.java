@@ -39865,6 +39865,8 @@ public class ChatActivity extends BaseFragment implements
         @Override
         public boolean didLongPressUserAvatar(ChatMessageCell cell, TLRPC.User user, float touchX, float touchY) {
             if (isAvatarPreviewerEnabled()) {
+                final TLRPC.User controllerUser = getMessagesController().getUser(user.id);
+                final TLRPC.User previewUser = controllerUser != null ? controllerUser : user;
                 final boolean enableMention = currentChat != null && (bottomChannelButtonsLayout == null || bottomChannelButtonsLayout.getVisibility() != View.VISIBLE) && (bottomOverlay == null || bottomOverlay.getVisibility() != View.VISIBLE);
                 final boolean enableSearchMessages = currentChat != null && (threadMessageId == 0 || isTopic) && (!ChatObject.isChannel(currentChat) || currentChat.megagroup);
                 final AvatarPreviewer.MenuItem[] menuItems = new AvatarPreviewer.MenuItem[2 + (enableMention ? 1 : 0) + (enableSearchMessages ? 1 : 0)];
@@ -39877,30 +39879,30 @@ public class ChatActivity extends BaseFragment implements
                 if (enableSearchMessages) {
                     menuItems[a++] = AvatarPreviewer.MenuItem.SEARCH_MESSAGES;
                 }
-                final TLRPC.UserFull userFull = getMessagesController().getUserFull(user.id);
+                final TLRPC.UserFull userFull = getMessagesController().getUserFull(previewUser.id);
                 AvatarPreviewer.Data data;
                 if (userFull != null) {
-                    data = AvatarPreviewer.Data.of(user, userFull, menuItems);
+                    data = AvatarPreviewer.Data.of(previewUser, userFull, menuItems);
                     if (!AvatarPreviewer.canPreview(data)) {
-                        data = AvatarPreviewer.Data.of(user, classGuid, menuItems);
+                        data = AvatarPreviewer.Data.of(previewUser, classGuid, menuItems);
                     }
                 } else {
-                    data = AvatarPreviewer.Data.of(user, classGuid, menuItems);
+                    data = AvatarPreviewer.Data.of(previewUser, classGuid, menuItems);
                 }
                 if (AvatarPreviewer.canPreview(data)) {
                     AvatarPreviewer.getInstance().show((ViewGroup) fragmentView, themeDelegate, data, item -> {
                         switch (item) {
                             case SEND_MESSAGE:
-                                openDialog(cell, user);
+                                openDialog(cell, previewUser);
                                 break;
                             case OPEN_PROFILE:
-                                openProfile(user);
+                                openProfile(previewUser);
                                 break;
                             case MENTION:
-                                appendMention(user);
+                                appendMention(previewUser);
                                 break;
                             case SEARCH_MESSAGES:
-                                openSearchWithUser(user);
+                                openSearchWithUser(previewUser);
                                 break;
                         }
                     });
@@ -39908,16 +39910,16 @@ public class ChatActivity extends BaseFragment implements
                 } else {
                     ItemOptions.makeOptions(ChatActivity.this, cell)
                         .add(R.drawable.msg_openprofile, getString(R.string.OpenProfile), () -> {
-                            openProfile(user);
+                            openProfile(previewUser);
                         })
                         .add(R.drawable.msg_discussion, getString(R.string.SendMessage), () -> {
-                            openDialog(cell, user);
+                            openDialog(cell, previewUser);
                         })
                         .addIf(enableMention, R.drawable.msg_mention, getString(R.string.Mention), () -> {
-                            appendMention(user);
+                            appendMention(previewUser);
                         })
                         .addIf(enableSearchMessages, R.drawable.msg_search, getString(R.string.AvatarPreviewSearchMessages), () -> {
-                            openSearchWithUser(user);
+                            openSearchWithUser(previewUser);
                         })
                         .setDrawScrim(false)
                         .setGravity(Gravity.LEFT)
