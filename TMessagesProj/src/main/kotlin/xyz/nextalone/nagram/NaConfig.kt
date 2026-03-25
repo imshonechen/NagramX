@@ -1221,6 +1221,12 @@ object NaConfig {
             ConfigItem.configTypeBool,
             true
         )
+    val hideBottomNavigationBar =
+        addConfig(
+            "HideBottomNavigationBar",
+            ConfigItem.configTypeBool,
+            false
+        )
 
     val preferredTranslateTargetLangList = ArrayList<String>()
     fun updatePreferredTranslateTargetLangList() {

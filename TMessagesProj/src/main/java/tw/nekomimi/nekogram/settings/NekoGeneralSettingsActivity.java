@@ -252,6 +252,7 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
     private final AbstractConfigCell headerMainTabs = cellGroup.appendCell(new ConfigCellHeader(getString(R.string.MainTabsSettingsHeader)));
     private final AbstractConfigCell hideTitlesRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getMainTabsHideTitles()));
     private final AbstractConfigCell hideContactsRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getMainTabsHideContacts()));
+    private final AbstractConfigCell hideBottomNavigationBarRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideBottomNavigationBar()));
     private final AbstractConfigCell dividerMainTabs = cellGroup.appendCell(new ConfigCellDivider());
 
     // Privacy
@@ -296,6 +297,7 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
         checkCustomTitleRows();
         checkPushServiceTypeRows();
         checkOpenArchiveOnPullRows();
+        checkMainTabsRows();
         addRowsToMap(cellGroup);
     }
 
@@ -401,6 +403,9 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
             } else if (key.equals(NaConfig.INSTANCE.getMainTabsHideTitles().getKey())) {
                 parentLayout.rebuildAllFragmentViews(false, false);
             } else if (key.equals(NaConfig.INSTANCE.getMainTabsHideContacts().getKey())) {
+                parentLayout.rebuildAllFragmentViews(false, false);
+            } else if (key.equals(NaConfig.INSTANCE.getHideBottomNavigationBar().getKey())) {
+                checkMainTabsRows();
                 parentLayout.rebuildAllFragmentViews(false, false);
             }
         };
@@ -669,6 +674,48 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
             }
         }
         addRowsToMap(cellGroup);
+    }
+
+    private void checkMainTabsRows() {
+        boolean hideBottomNavigationBar = NaConfig.INSTANCE.getHideBottomNavigationBar().Bool();
+        if (listAdapter == null) {
+            if (hideBottomNavigationBar) {
+                cellGroup.rows.remove(hideTitlesRow);
+                cellGroup.rows.remove(hideContactsRow);
+            }
+            return;
+        }
+        boolean changed = false;
+        if (!hideBottomNavigationBar) {
+            if (!cellGroup.rows.contains(hideContactsRow)) {
+                int index = cellGroup.rows.indexOf(hideBottomNavigationBarRow);
+                cellGroup.rows.add(index, hideContactsRow);
+                listAdapter.notifyItemInserted(index);
+                changed = true;
+            }
+            if (!cellGroup.rows.contains(hideTitlesRow)) {
+                int index = cellGroup.rows.indexOf(hideContactsRow);
+                cellGroup.rows.add(index, hideTitlesRow);
+                listAdapter.notifyItemInserted(index);
+                changed = true;
+            }
+        } else {
+            int rowIndex = cellGroup.rows.indexOf(hideContactsRow);
+            if (rowIndex != -1) {
+                cellGroup.rows.remove(hideContactsRow);
+                listAdapter.notifyItemRemoved(rowIndex);
+                changed = true;
+            }
+            rowIndex = cellGroup.rows.indexOf(hideTitlesRow);
+            if (rowIndex != -1) {
+                cellGroup.rows.remove(hideTitlesRow);
+                listAdapter.notifyItemRemoved(rowIndex);
+                changed = true;
+            }
+        }
+        if (changed) {
+            addRowsToMap(cellGroup);
+        }
     }
 
     private boolean shouldShowPersian() {

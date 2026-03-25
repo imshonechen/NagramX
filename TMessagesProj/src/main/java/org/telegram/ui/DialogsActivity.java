@@ -273,6 +273,7 @@ import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.helpers.MainTabsHelper;
 import tw.nekomimi.nekogram.helpers.PasscodeHelper;
 import tw.nekomimi.nekogram.helpers.TypefaceHelper;
+import tw.nekomimi.nekogram.ui.BookmarkManagerActivity;
 import xyz.nextalone.nagram.NaConfig;
 
 public class DialogsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, FloatingDebugProvider, FactorAnimator.Target, MainTabsActivity.TabFragmentDelegate {
@@ -2905,8 +2906,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         BirthdayController.getInstance(currentAccount).check();
-        additionNavigationBarHeight = hasMainTabs ? dp(MainTabsHelper.getMainTabsHeightWithMargins()) : 0;
-        additionFloatingButtonOffset = hasMainTabs ? dp(MainTabsHelper.getMainTabsHeight() + MainTabsHelper.getMainTabsMargin()) : 0;
+        additionNavigationBarHeight = hasMainTabs && !NaConfig.INSTANCE.getHideBottomNavigationBar().Bool() ? dp(MainTabsHelper.getMainTabsHeightWithMargins()) : 0;
+        additionFloatingButtonOffset = hasMainTabs && !NaConfig.INSTANCE.getHideBottomNavigationBar().Bool() ? dp(MainTabsHelper.getMainTabsHeight() + MainTabsHelper.getMainTabsMargin()) : 0;
 
         return true;
     }
@@ -3178,8 +3179,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         filterTabsView = null;
         selectedDialogs.clear();
 
-        additionNavigationBarHeight = hasMainTabs ? dp(MainTabsHelper.getMainTabsHeightWithMargins()) : 0;
-        additionFloatingButtonOffset = hasMainTabs ? dp(MainTabsHelper.getMainTabsHeight() + MainTabsHelper.getMainTabsMargin()) : 0;
+        additionNavigationBarHeight = hasMainTabs && !NaConfig.INSTANCE.getHideBottomNavigationBar().Bool() ? dp(MainTabsHelper.getMainTabsHeightWithMargins()) : 0;
+        additionFloatingButtonOffset = hasMainTabs && !NaConfig.INSTANCE.getHideBottomNavigationBar().Bool() ? dp(MainTabsHelper.getMainTabsHeight() + MainTabsHelper.getMainTabsMargin()) : 0;
 
         maximumVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
 
@@ -13292,6 +13293,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         if (!isArchive()) {
             final boolean isCurrentThemeDark;
+            final boolean hideBottomNavigationBar = NaConfig.INSTANCE.getHideBottomNavigationBar().Bool();
             if (resourceProvider != null) {
                 isCurrentThemeDark = resourceProvider.isDark();
             } else {
@@ -13335,6 +13337,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         });
                     });
             io.addGap();
+            if (hideBottomNavigationBar) {
+                io.add(R.drawable.left_status_profile, getString(R.string.MyProfile), () -> {
+                    Bundle args = new Bundle();
+                    args.putLong("user_id", getUserConfig().getClientUserId());
+                    args.putBoolean("my_profile", true);
+                    presentFragment(new ProfileActivity(args));
+                });
+            }
             io.add(R.drawable.outline_groups_24, getString(R.string.NewGroup), () -> {
                 Bundle args = new Bundle();
                 presentFragment(new GroupCreateActivity(args));
@@ -13350,11 +13360,18 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     channelPrefs.edit().putBoolean("channel_intro", true).apply();
                 }
             });
-            if (MainTabsHelper.isContactsTabHidden()) {
+            if (hideBottomNavigationBar || MainTabsHelper.isContactsTabHidden()) {
                 io.add(R.drawable.tabs_contacts_24, getString(R.string.Contacts), () -> {
                     Bundle args = new Bundle();
                     args.putBoolean("needPhonebook", true);
                     presentFragment(new ContactsActivity(args));
+                });
+            }
+            if (hideBottomNavigationBar && NaConfig.INSTANCE.getHideArchive().Bool()) {
+                io.add(R.drawable.msg_archive, getString(R.string.ArchivedChats), () -> {
+                    Bundle args = new Bundle();
+                    args.putInt("folderId", 1);
+                    presentFragment(new DialogsActivity(args));
                 });
             }
             io.add(R.drawable.outline_saved_24, getString(R.string.SavedMessages), () -> {
@@ -13362,6 +13379,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
                 presentFragment(new ChatActivity(args));
             });
+            if (hideBottomNavigationBar && NaConfig.INSTANCE.getShowAddToBookmark().Bool()) {
+                io.add(R.drawable.msg_fave, getString(R.string.BookmarksManager), () -> presentFragment(new BookmarkManagerActivity()));
+            }
             if (ApplicationLoader.applicationLoaderInstance != null) {
                 ApplicationLoader.applicationLoaderInstance.addItemOptions(io);
             }
@@ -13389,7 +13409,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                 }
             }
-            if (getUserConfig().showCallsTab) {
+            if (getUserConfig().showCallsTab || hideBottomNavigationBar) {
                 io.add(R.drawable.msg_settings_old, getString(R.string.Settings), () -> {
                     presentFragment(new SettingsActivity());
                 });
@@ -13792,7 +13812,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         iBlur3PositionActionBar.set(0, -additionalList, fragmentView.getMeasuredWidth(), lerp(actionBarHeight, actionBarHeightSearch, animatorSearchVisible.getFloatValue()) + additionalList );
 
         boolean hasBottomBlur = false;
-        if (hasMainTabs) {
+        if (hasMainTabs && !NaConfig.INSTANCE.getHideBottomNavigationBar().Bool()) {
             iBlur3PositionMainTabs.set(0, mainTabTop, fragmentView.getMeasuredWidth(), mainTabBottom);
             iBlur3PositionMainTabs.inset(0, LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0 : -dp(48));
 
