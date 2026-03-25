@@ -46287,11 +46287,13 @@ public class ChatActivity extends BaseFragment implements
                             items.add(LocaleController.getString(R.string.SaveToGallery));
                             options.add(nkbtn_stickerdl);
                             icons.add(R.drawable.msg_gallery);
-                            allowCopyPhoto = true;
-                            if (!GroupedIconsView.useGroupedIcons()) {
-                                items.add(getString(R.string.CopySticker));
-                                icons.add(R.drawable.msg_copy_photo);
-                                options.add(OPTION_COPY_PHOTO);
+                            if (!selectedObject.isVideoSticker()) {
+                                allowCopyPhoto = true;
+                                if (!GroupedIconsView.useGroupedIcons()) {
+                                    items.add(getString(R.string.CopySticker));
+                                    icons.add(R.drawable.msg_copy_photo);
+                                    options.add(OPTION_COPY_PHOTO);
+                                }
                             }
                         }
                         if (NaConfig.INSTANCE.getShowAddToStickers().Bool()) {
