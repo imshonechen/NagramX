@@ -8441,16 +8441,18 @@ public class ChatActivity extends BaseFragment implements
         });*/
         // left button action start
         boolean noForwards = getMessagesController().isChatNoForwards(currentChat) || currentChat != null && currentChat.noforwards;
+        boolean currentLeftButtonNoForwards = isCurrentLeftButtonNoForwards();
         ChatsHelper chatsHelper = ChatsHelper.getInstance(currentAccount);
-        actionsButtonsLayout.setReplyButtonTextAndIcon(ChatsHelper.getLeftButtonText(noForwards), ChatsHelper.getLeftButtonDrawable(noForwards));
+        int leftButtonAction = ChatsHelper.getLeftButtonAction(this, currentLeftButtonNoForwards);
+        actionsButtonsLayout.setReplyButtonTextAndIcon(ChatsHelper.getLeftButtonText(leftButtonAction), ChatsHelper.getLeftButtonDrawable(leftButtonAction));
         actionsButtonsLayout.setForwardButtonTextAndIcon(LocaleController.getString(R.string.Forward), R.drawable.input_forward, true);
         actionsButtonsLayout.setReplyButtonOnClickListener(v -> {
-            chatsHelper.makeReplyButtonClick(this, noForwards);
+            chatsHelper.makeReplyButtonClick(this, isCurrentLeftButtonNoForwards());
         });
         if (!noForwards) {
             actionsButtonsLayout.setReplyButtonOnLongClickListener(v -> {
                 if (!NekoConfig.disableVibration.Bool()) v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
-                chatsHelper.makeReplyButtonLongClick(this, noForwards, getResourceProvider());
+                chatsHelper.makeReplyButtonLongClick(this, isCurrentLeftButtonNoForwards(), getResourceProvider());
                 return false;
             });
         }
@@ -9960,13 +9962,84 @@ public class ChatActivity extends BaseFragment implements
 
     }
     // left button action start
-    public void updateLeftBottomButton(boolean noForwards) {
+    private boolean isCurrentLeftButtonNoForwards() {
+        return isPeerNoForwards() || hasSelectedNoforwardsMessage();
+    }
+
+    private void updateLeftBottomButton(int leftButtonAction) {
         if (actionsButtonsLayout != null) {
             actionsButtonsLayout.setReplyButtonTextAndIcon(
-                ChatsHelper.getLeftButtonText(noForwards),
-                ChatsHelper.getLeftButtonDrawable(noForwards)
+                ChatsHelper.getLeftButtonText(leftButtonAction),
+                ChatsHelper.getLeftButtonDrawable(leftButtonAction)
             );
         }
+    }
+
+    public void updateLeftBottomButton(boolean noForwards) {
+        updateLeftBottomButton(ChatsHelper.getLeftButtonAction(this, noForwards));
+    }
+
+    private boolean isSelectableBetweenMessage(MessageObject message, int begin, int end) {
+        int msgId = message.getId();
+        if (msgId <= begin || msgId >= end) {
+            return false;
+        }
+        int index = message.getDialogId() == dialog_id ? 0 : 1;
+        if (selectedMessagesIds[index].indexOfKey(msgId) >= 0) {
+            return false;
+        }
+        if (threadMessageObjects != null && threadMessageObjects.contains(message) && !isThreadChat()) {
+            return false;
+        }
+        long fromId = message.getFromChatId();
+        int type = getMessageType(message);
+        return type >= MESSAGE_TYPE_MEDIA && type != MESSAGE_TYPE_SEND_ERROR_TEXT;
+    }
+
+    public boolean canSelectBetweenMessages() {
+        int[] bounds = ChatsHelper.getSelectBetweenBounds(selectedMessagesIds);
+        if (bounds == null) {
+            return false;
+        }
+        int begin = bounds[0];
+        int end = bounds[1];
+        for (int i = 0; i < messages.size(); i++) {
+            if (isSelectableBetweenMessage(messages.get(i), begin, end)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void performSelectBetweenMessages() {
+        int[] bounds = ChatsHelper.getSelectBetweenBounds(selectedMessagesIds);
+        if (bounds == null) {
+            return;
+        }
+        int begin = bounds[0];
+        int end = bounds[1];
+        for (int i = 0; i < messages.size(); i++) {
+            MessageObject message = messages.get(i);
+            if (!isSelectableBetweenMessage(message, begin, end)) {
+                continue;
+            }
+            if (selectedMessagesIds[0].size() + selectedMessagesIds[1].size() >= 100) {
+                if (message.getId() != begin) {
+                    for (int x = 0; x < messages.size(); x++) {
+                        MessageObject msg = messages.get(x);
+                        if (msg.getId() == begin) {
+                            addToSelectedMessages(msg, false, false);
+                            addToSelectedMessages(message, true);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            addToSelectedMessages(message, true);
+        }
+        updateActionModeTitle();
+        updateVisibleRows();
     }
 
     public void showLeftBottomButtonRipple() {
@@ -19664,32 +19737,17 @@ public class ChatActivity extends BaseFragment implements
                     replyItem.setVisibility(!doShrinkActionBarItems && showReplyItem);
                 }
 
+                boolean canSelectBetween = false;
+                boolean canSelectBetweenComputed = false;
+
                 if (selectItem != null) {
-                    ArrayList<Integer> ids = new ArrayList<>();
-                    for (int a = 1; a >= 0; a--) {
-                        for (int b = 0; b < selectedMessagesIds[a].size(); b++) {
-                            ids.add(selectedMessagesIds[a].keyAt(b));
-                        }
+                    if (NaConfig.INSTANCE.getActionBarButtonSelectBetween().Bool()) {
+                        canSelectBetween = canSelectBetweenMessages();
+                        canSelectBetweenComputed = true;
+                        selectItem.setVisibility(canSelectBetween ? View.VISIBLE : View.GONE);
+                    } else {
+                        selectItem.setVisibility(View.GONE);
                     }
-                    Collections.sort(ids);
-                    Integer begin = ids.get(0);
-                    Integer end = ids.get(ids.size() - 1);
-                    boolean selectable = false;
-                    for (int i = 0; i < messages.size(); i++) {
-                        int msgId = messages.get(i).getId();
-                        if (msgId > begin && msgId < end && selectedMessagesIds[0].indexOfKey(msgId) < 0) {
-                            MessageObject message = messages.get(i);
-                            int type = getMessageType(message);
-
-                            if (type < MESSAGE_TYPE_MEDIA || type == MESSAGE_TYPE_SEND_ERROR_TEXT) {
-                                continue;
-                            }
-
-                            selectable = true;
-                            break;
-                        }
-                    }
-                    selectItem.setVisibility(selectable && NaConfig.INSTANCE.getActionBarButtonSelectBetween().Bool() ? View.VISIBLE : View.GONE);
                 }
 
                 if (deleteItem != null) {
@@ -19720,14 +19778,23 @@ public class ChatActivity extends BaseFragment implements
                     }
 
                     int newVisibility;
+                    int configuredLeftButtonAction = NaConfig.INSTANCE.getLeftBottomButton().Int();
+                    if (configuredLeftButtonAction == ChatsHelper.LEFT_BUTTON_SELECT_BETWEEN && !canSelectBetweenComputed) {
+                        canSelectBetween = canSelectBetweenMessages();
+                        canSelectBetweenComputed = true;
+                    }
+                    int leftButtonAction = ChatsHelper.getLeftButtonAction(configuredLeftButtonAction, noforwards, canSelectBetween);
+                    updateLeftBottomButton(leftButtonAction);
 
-                    if ((chatMode == MODE_SCHEDULED || !allowChatActions || selectedMessagesIds[0].size() != 0 && selectedMessagesIds[1].size() != 0) && (NaConfig.INSTANCE.getLeftBottomButton().Int() == ChatsHelper.LEFT_BUTTON_REPLY || noforwards)) {
+                    if (leftButtonAction == ChatsHelper.LEFT_BUTTON_SELECT_BETWEEN) {
+                        newVisibility = View.VISIBLE;
+                    } else if ((chatMode == MODE_SCHEDULED || !allowChatActions || selectedMessagesIds[0].size() != 0 && selectedMessagesIds[1].size() != 0) && (leftButtonAction == ChatsHelper.LEFT_BUTTON_REPLY || noforwards)) {
                         newVisibility = View.GONE;
                     } else if (selectedCount == 1) {
                         newVisibility = View.VISIBLE;
                         for (int b = 0, N = selectedMessagesIds[0].size(); b < N; b++) {
                             MessageObject message = selectedMessagesIds[0].valueAt(b);
-                            if ((ChatObject.isForum(currentChat) && !canSendMessageToTopic(message)) || (NaConfig.INSTANCE.getLeftBottomButton().Int() != ChatsHelper.LEFT_BUTTON_REPLY && !message.canForwardMessage())) {
+                            if ((ChatObject.isForum(currentChat) && !canSendMessageToTopic(message)) || (leftButtonAction != ChatsHelper.LEFT_BUTTON_REPLY && !message.canForwardMessage())) {
                                 newVisibility = View.GONE;
                                 break;
                             }
@@ -19739,7 +19806,7 @@ public class ChatActivity extends BaseFragment implements
                             for (int b = 0, N = selectedMessagesIds[a].size(); b < N; b++) {
                                 MessageObject message = selectedMessagesIds[a].valueAt(b);
                                 long groupId = message.getGroupId();
-                                if ((groupId == 0 || lastGroupId != 0 && lastGroupId != groupId || (ChatObject.isForum(currentChat) && !canSendMessageToTopic(message))) && (NaConfig.INSTANCE.getLeftBottomButton().Int() == ChatsHelper.LEFT_BUTTON_REPLY || noforwards || !message.canForwardMessage())) {
+                                if ((groupId == 0 || lastGroupId != 0 && lastGroupId != groupId || (ChatObject.isForum(currentChat) && !canSendMessageToTopic(message))) && (leftButtonAction == ChatsHelper.LEFT_BUTTON_REPLY || noforwards || !message.canForwardMessage())) {
                                     newVisibility = View.GONE;
                                     break;
                                 }
@@ -19750,7 +19817,7 @@ public class ChatActivity extends BaseFragment implements
                             }
                         }
                     }
-                    if (threadMessageObjects != null && newVisibility == View.VISIBLE) {
+                    if (threadMessageObjects != null && newVisibility == View.VISIBLE && leftButtonAction != ChatsHelper.LEFT_BUTTON_SELECT_BETWEEN) {
                         for (int b = 0, N = selectedMessagesIds[0].size(); b < N; b++) {
                             MessageObject message = selectedMessagesIds[0].valueAt(b);
                             if (threadMessageObjects.contains(message)) {
@@ -43935,45 +44002,7 @@ public class ChatActivity extends BaseFragment implements
             getMessageHelper().resetMessageContent(dialog_id, messages);
             clearSelectionMode();
         } else if (id == nkactionbarbtn_selectBetween) {
-            ArrayList<Integer> ids = new ArrayList<>();
-            for (int a = 1; a >= 0; a--) {
-                for (int b = 0; b < selectedMessagesIds[a].size(); b++) {
-                    ids.add(selectedMessagesIds[a].keyAt(b));
-                }
-            }
-            Collections.sort(ids);
-            Integer begin = ids.get(0);
-            Integer end = ids.get(ids.size() - 1);
-            for (int i = 0; i < messages.size(); i++) {
-                int msgId = messages.get(i).getId();
-                long fromId = messages.get(i).getFromChatId();
-                if (msgId > begin && msgId < end && selectedMessagesIds[0].indexOfKey(msgId) < 0) {
-                    MessageObject message = messages.get(i);
-                    int type = getMessageType(message);
-
-                    if (type < MESSAGE_TYPE_MEDIA || type == MESSAGE_TYPE_SEND_ERROR_TEXT) {
-                        continue;
-                    }
-
-                    if (selectedMessagesIds[0].size() + selectedMessagesIds[1].size() >= 100) {
-                        if (message.getId() != begin) {
-                            for (int x = 0; x < messages.size(); x++) {
-                                MessageObject msg = messages.get(x);
-                                if (msg.getId() == begin) {
-                                    addToSelectedMessages(msg, false, false);
-                                    addToSelectedMessages(message, true);
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    addToSelectedMessages(message, true);
-                }
-            }
-            updateActionModeTitle();
-            updateVisibleRows();
+            performSelectBetweenMessages();
         } else if (id == nkheaderbtn_zibi) {
             getMessageHelper().createDeleteHistoryAlert(ChatActivity.this, currentChat, forumTopic, mergeDialogId, themeDelegate);
         } else if (id == nkbtn_bookmarks_manager) {
