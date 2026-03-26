@@ -13452,7 +13452,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                 }
             }
-            if (hideBottomNavigationBar && NekoConfig.showGhostInDrawer.Bool()) {
+            if (NekoConfig.showGhostInDrawer.Bool()) {
                 final String ghostModeText = NekoConfig.isGhostModeActive()
                         ? getString(R.string.DisableGhostMode)
                         : getString(R.string.EnableGhostMode);
