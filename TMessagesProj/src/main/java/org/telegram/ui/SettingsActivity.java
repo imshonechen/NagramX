@@ -468,7 +468,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         cameraButton.setBackground(Theme.createCircleDrawable(dp(32), getThemedColor(Theme.key_windowBackgroundGray)));
         cameraButton.setPadding(dp(2), dp(2), dp(2), dp(2));
         cameraBackground = new FrameLayout(context);
-        cameraBackground.setBackground(Theme.createCircleDrawable(dp(30), getThemedColor(Theme.key_featuredStickers_addButton)));
+        cameraBackground.setBackground(Theme.createCircleDrawable(dp(30), getThemedColor(Theme.getActiveTheme().isMonetNight() ? Theme.key_featuredStickers_unread : Theme.key_featuredStickers_addButton)));
         cameraImageView = new ImageView(context);
         cameraImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         cameraImageView.setImageResource(R.drawable.filled_premium_camera);

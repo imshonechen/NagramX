@@ -441,8 +441,8 @@ public class Switch extends View {
         int trackCheckedFillKey = trackCheckedColorKey;
         int thumbCheckedKey = thumbCheckedColorKey;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MonetHelper.useMonetMd3Colors()) {
-            trackCheckedFillKey = Theme.key_featuredStickers_addButton;
-            thumbCheckedKey = Theme.getActiveTheme().isMonetDark() || Theme.getActiveTheme().isMonetAmoled()
+            trackCheckedFillKey = Theme.key_dialogRoundCheckBox;
+            thumbCheckedKey = Theme.getActiveTheme().isMonetNight()
                     ? Theme.key_statisticChartRipple // a1_800
                     : Theme.key_chat_outInstant; // a1_10
         }
