@@ -13404,7 +13404,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             });
             if (hideBottomNavigationBar || MainTabsHelper.isContactsTabHidden()) {
-                io.add(R.drawable.tabs_contacts_24, getString(R.string.Contacts), () -> {
+                io.add(R.drawable.msg_contacts, getString(R.string.Contacts), () -> {
                     Bundle args = new Bundle();
                     args.putBoolean("needPhonebook", true);
                     presentFragment(new ContactsActivity(args));
