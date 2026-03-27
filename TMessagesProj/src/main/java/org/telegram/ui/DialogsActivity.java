@@ -271,6 +271,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import me.vkryl.android.animator.BoolAnimator;
 import me.vkryl.android.animator.FactorAnimator;
 
+import tw.nekomimi.nekogram.BackButtonMenuRecent;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.helpers.MainTabsHelper;
 import tw.nekomimi.nekogram.helpers.PasscodeHelper;
@@ -13408,6 +13409,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     Bundle args = new Bundle();
                     args.putBoolean("needPhonebook", true);
                     presentFragment(new ContactsActivity(args));
+                });
+            }
+            if (hideBottomNavigationBar) {
+                io.add(R.drawable.menu_recent, getString(R.string.RecentChats), () -> {
+                    io.dismiss();
+                    BackButtonMenuRecent.show(currentAccount, this, optionsItem);
                 });
             }
             if (hideBottomNavigationBar && NaConfig.INSTANCE.getHideArchive().Bool()) {
