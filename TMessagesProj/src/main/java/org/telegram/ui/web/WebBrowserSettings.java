@@ -224,6 +224,10 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
     public int clearListRow;
     public int searchRow;
 
+    private boolean usesRippleToggleRow() {
+        return Theme.getActiveTheme() == null || !Theme.getActiveTheme().isMonet();
+    }
+
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
         enableRow = -1;
@@ -235,7 +239,7 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
         searchRow = -1;
 
         enableRow = items.size();
-        items.add(UItem.asRippleCheck(BUTTON_TOGGLE, getString(R.string.BrowserSettingsEnable)).setChecked(SharedConfig.inappBrowser));
+        items.add((usesRippleToggleRow() ? UItem.asRippleCheck(BUTTON_TOGGLE, getString(R.string.BrowserSettingsEnable)) : UItem.asCheck(BUTTON_TOGGLE, getString(R.string.BrowserSettingsEnable))).setChecked(SharedConfig.inappBrowser));
         items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsEnableInfo)));
         if (!SharedConfig.inappBrowser) {
             items.add(UItem.asHeader(getString(R.string.BrowserSettingsCustomTabsTitle)));
@@ -297,7 +301,9 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
         } else if (item.id == BUTTON_TOGGLE) {
             SharedConfig.toggleInappBrowser();
             ((TextCheckCell) view).setChecked(SharedConfig.inappBrowser);
-            ((TextCheckCell) view).setBackgroundColorAnimated(SharedConfig.inappBrowser, Theme.getColor(SharedConfig.inappBrowser ? Theme.key_windowBackgroundChecked : Theme.key_windowBackgroundUnchecked));
+            if (usesRippleToggleRow()) {
+                ((TextCheckCell) view).setBackgroundColorAnimated(SharedConfig.inappBrowser, Theme.getColor(SharedConfig.inappBrowser ? Theme.key_windowBackgroundChecked : Theme.key_windowBackgroundUnchecked));
+            }
             listView.adapter.update(true);
         } else if (item.id == BUTTON_CUSTOMTABS_ON) {
             SharedConfig.toggleCustomTabs(true);

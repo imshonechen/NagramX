@@ -71,6 +71,7 @@ public class Switch extends View {
     private int trackCheckedColorKey = Theme.key_switch2TrackChecked;
     private int thumbColorKey = Theme.key_windowBackgroundWhite;
     private int thumbCheckedColorKey = Theme.key_windowBackgroundWhite;
+    private int separateTrackColorKey = -1;
 
     private Drawable iconDrawable;
     private int lastIconColor;
@@ -256,6 +257,14 @@ public class Switch extends View {
         trackCheckedColorKey = trackChecked;
         thumbColorKey = thumb;
         thumbCheckedColorKey = thumbChecked;
+    }
+
+    public void setSeparateTrackColorKey(int separateTrackColorKey) {
+        if (this.separateTrackColorKey == separateTrackColorKey) {
+            return;
+        }
+        this.separateTrackColorKey = separateTrackColorKey;
+        invalidate();
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
@@ -463,7 +472,7 @@ public class Switch extends View {
             color2 = processColor(Theme.getColor(trackCheckedFillKey, resourcesProvider));
 
             if (isUsingSeparateView) {
-                color1 = Color.TRANSPARENT;
+                color1 = separateTrackColorKey >= 0 ? processColor(Theme.getColor(separateTrackColorKey, resourcesProvider)) : Color.TRANSPARENT;
             }
 
             if (a == 0 && iconDrawable != null && lastIconColor != (isChecked ? color2 : color1)) {
