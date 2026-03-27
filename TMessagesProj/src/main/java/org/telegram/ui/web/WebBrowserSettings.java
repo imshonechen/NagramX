@@ -242,44 +242,43 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
             items.add(UItem.asRadio(BUTTON_CUSTOMTABS_ON, getString(R.string.BrowserSettingsCustomTabs)).setChecked(SharedConfig.customTabs));
             items.add(UItem.asRadio(BUTTON_CUSTOMTABS_OFF, getString(R.string.BrowserSettingsNoCustomTabs)).setChecked(!SharedConfig.customTabs));
             items.add(UItem.asShadow(getString(R.string.BrowserSettingsNoCustomTabsInfo)));
-        } else {
-            clearCookiesRow = items.size();
-            items.add(UItem.asButton(BUTTON_CLEAR_COOKIES, R.drawable.menu_clear_cookies, LocaleController.getString(R.string.BrowserSettingsCookiesClear), cookiesSize > 0 ? AndroidUtilities.formatFileSize(cookiesSize) : ""));
-            clearCacheRow = items.size();
-            items.add(UItem.asButton(BUTTON_CLEAR_CACHE, R.drawable.menu_clear_cache, LocaleController.getString(R.string.BrowserSettingsCacheClear), cacheSize > 0 ? AndroidUtilities.formatFileSize(cacheSize) : ""));
-            items.add(UItem.asShadow(getString(R.string.BrowserSettingsCookiesInfo)));
-            if (historySize > 0) {
-                historyRow = items.size();
-                items.add(UItem.asButton(BUTTON_OPEN_HISTORY, R.drawable.menu_clear_recent, getString(R.string.BrowserSettingsHistoryShow)));
-                clearHistoryRow = items.size();
-                items.add(UItem.asButton(BUTTON_CLEAR_HISTORY, R.drawable.menu_clear_cache, getString(R.string.BrowserSettingsHistoryClear), formatPluralStringComma("BrowserSettingsHistoryPages", (int) historySize, ',')));
-                items.add(UItem.asShadow(null));
+        }
+        clearCookiesRow = items.size();
+        items.add(UItem.asButton(BUTTON_CLEAR_COOKIES, R.drawable.menu_clear_cookies, LocaleController.getString(R.string.BrowserSettingsCookiesClear), cookiesSize > 0 ? AndroidUtilities.formatFileSize(cookiesSize) : ""));
+        clearCacheRow = items.size();
+        items.add(UItem.asButton(BUTTON_CLEAR_CACHE, R.drawable.menu_clear_cache, LocaleController.getString(R.string.BrowserSettingsCacheClear), cacheSize > 0 ? AndroidUtilities.formatFileSize(cacheSize) : ""));
+        items.add(UItem.asShadow(getString(R.string.BrowserSettingsCookiesInfo)));
+        if (historySize > 0) {
+            historyRow = items.size();
+            items.add(UItem.asButton(BUTTON_OPEN_HISTORY, R.drawable.menu_clear_recent, getString(R.string.BrowserSettingsHistoryShow)));
+            clearHistoryRow = items.size();
+            items.add(UItem.asButton(BUTTON_CLEAR_HISTORY, R.drawable.menu_clear_cache, getString(R.string.BrowserSettingsHistoryClear), formatPluralStringComma("BrowserSettingsHistoryPages", (int) historySize, ',')));
+            items.add(UItem.asShadow(null));
+        }
+        items.add(UItem.asHeader(LocaleController.getString(R.string.BrowserSettingsNeverOpenInTitle)));
+        neverOpenRow = items.size();
+        items.add(UItem.asButton(BUTTON_ADD, addIcon, LocaleController.getString(R.string.BrowserSettingsNeverOpenInAdd)).accent());
+        RestrictedDomainsList.getInstance().load();
+        ArrayList<ArrayList<String>> allDomains = RestrictedDomainsList.getInstance().restrictedDomains;
+        for (ArrayList<String> domains : allDomains) {
+            WebMetadataCache.WebMetadata meta = null;
+            for (String domain : domains) {
+                meta = WebMetadataCache.getInstance().get(domain);
+                if (meta != null) break;
             }
-            items.add(UItem.asHeader(LocaleController.getString(R.string.BrowserSettingsNeverOpenInTitle)));
-            neverOpenRow = items.size();
-            items.add(UItem.asButton(BUTTON_ADD, addIcon, LocaleController.getString(R.string.BrowserSettingsNeverOpenInAdd)).accent());
-            RestrictedDomainsList.getInstance().load();
-            ArrayList<ArrayList<String>> allDomains = RestrictedDomainsList.getInstance().restrictedDomains;
-            for (ArrayList<String> domains : allDomains) {
-                WebMetadataCache.WebMetadata meta = null;
-                for (String domain : domains) {
-                    meta = WebMetadataCache.getInstance().get(domain);
-                    if (meta != null) break;
-                }
-                items.add(WebsiteView.Factory.as(domains, meta == null ? "" : (TextUtils.isEmpty(meta.sitename) ? (TextUtils.isEmpty(meta.title) ? "" : meta.title) : meta.sitename), meta == null ? null : meta.favicon));
-            }
-            if (!allDomains.isEmpty()) {
-                clearListRow = items.size();
-                items.add(UItem.asButton(BUTTON_CLEAR_LIST, R.drawable.msg_clearcache, LocaleController.getString(R.string.BrowserSettingsNeverOpenInClearList)).red());
-            }
-            items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsNeverOpenInInfo)));
-            searchRow = items.size();
-            items.add(UItem.asButton(BUTTON_SEARCH_ENGINE, R.drawable.msg_search, LocaleController.getString(R.string.SearchEngine), SearchEngine.getCurrent().name));
-            items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsSearchEngineInfo)));
-            if (BuildVars.DEBUG_PRIVATE_VERSION) {
-                items.add(UItem.asCheck(12, "adaptable colors").setChecked(SharedConfig.adaptableColorInBrowser));
-                items.add(UItem.asCheck(13, "only local IV").setChecked(SharedConfig.onlyLocalInstantView));
-            }
+            items.add(WebsiteView.Factory.as(domains, meta == null ? "" : (TextUtils.isEmpty(meta.sitename) ? (TextUtils.isEmpty(meta.title) ? "" : meta.title) : meta.sitename), meta == null ? null : meta.favicon));
+        }
+        if (!allDomains.isEmpty()) {
+            clearListRow = items.size();
+            items.add(UItem.asButton(BUTTON_CLEAR_LIST, R.drawable.msg_clearcache, LocaleController.getString(R.string.BrowserSettingsNeverOpenInClearList)).red());
+        }
+        items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsNeverOpenInInfo)));
+        searchRow = items.size();
+        items.add(UItem.asButton(BUTTON_SEARCH_ENGINE, R.drawable.msg_search, LocaleController.getString(R.string.SearchEngine), SearchEngine.getCurrent().name));
+        items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsSearchEngineInfo)));
+        if (BuildVars.DEBUG_PRIVATE_VERSION) {
+            items.add(UItem.asCheck(12, "adaptable colors").setChecked(SharedConfig.adaptableColorInBrowser));
+            items.add(UItem.asCheck(13, "only local IV").setChecked(SharedConfig.onlyLocalInstantView));
         }
         items.add(UItem.asHeader(getString(R.string.NekoSettings)));
         items.add(UItem.asCheck(14, getString(R.string.DisableInAppBrowserGestures)).setChecked(NaConfig.INSTANCE.getDisableInAppBrowserGestures().Bool()));
