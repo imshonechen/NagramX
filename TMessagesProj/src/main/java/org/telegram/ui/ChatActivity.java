@@ -46342,7 +46342,7 @@ public class ChatActivity extends BaseFragment implements
                     }
                     TLRPC.Document document = selectedObject.getDocument();
                     if (!getMediaDataController().isStickerInFavorites(document)) {
-                        if (NaConfig.INSTANCE.getShowAddToFavorites().Bool() && getMediaDataController().canAddStickerToFavorites()) {
+                        if (NaConfig.INSTANCE.getShowAddToFavorites().Bool() && getMediaDataController().canAddStickerToFavorites() && !selectedObject.isDice()) {
                             items.add(LocaleController.getString(R.string.AddToFavorites));
                             options.add(OPTION_ADD_STICKER_TO_FAVORITES);
                             icons.add(R.drawable.msg_fave);
