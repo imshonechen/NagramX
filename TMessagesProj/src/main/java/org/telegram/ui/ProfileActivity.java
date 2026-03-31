@@ -474,14 +474,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private boolean callItemVisible;
     private boolean videoCallItemVisible;
     private boolean editItemVisible;
-    private boolean eventLogItemVisible;
     private ImageView callToActionItem;
 
     private ActionBarMenuItem animatingItem;
     private ActionBarMenuItem callItem;
     private ActionBarMenuItem videoCallItem;
     private ActionBarMenuItem editItem;
-    private ActionBarMenuItem eventLogItem;
     private ActionBarMenuItem otherItem;
     private ActionBarMenuItem searchItem;
     private ActionBarMenuSubItem editColorItem;
@@ -1909,11 +1907,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     editItem.setScaleY(1f - value);
                     editItem.setAlpha(1f - value);
                 }
-                if (eventLogItemVisible) {
-                    eventLogItem.setScaleX(1f - value);
-                    eventLogItem.setScaleY(1f - value);
-                    eventLogItem.setAlpha(1f - value);
-                }
                 if (callItemVisible) {
                     callItem.setScaleX(1f - value);
                     callItem.setScaleY(1f - value);
@@ -1939,9 +1932,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         if (editItemVisible) {
                             editItem.setVisibility(GONE);
                         }
-                        if (eventLogItemVisible) {
-                            eventLogItem.setVisibility(GONE);
-                        }
                         if (callItemVisible) {
                             callItem.setVisibility(GONE);
                         }
@@ -1961,9 +1951,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                     if (editItemVisible) {
                         editItem.setVisibility(VISIBLE);
-                    }
-                    if (eventLogItemVisible) {
-                        eventLogItem.setVisibility(VISIBLE);
                     }
                     if (callItemVisible) {
                         callItem.setVisibility(VISIBLE);
@@ -2102,8 +2089,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 return callItem;
             } else if (editItemVisible) {
                 return editItem;
-            } else if (eventLogItemVisible) {
-                return eventLogItem;
             } else if (searchItem != null) {
                 return searchItem;
             } else {
@@ -3779,7 +3764,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 callItem.setVisibility(expanded || !callItemVisible ? GONE : INVISIBLE);
                 videoCallItem.setVisibility(expanded || !videoCallItemVisible ? GONE : INVISIBLE);
                 editItem.setVisibility(expanded || !editItemVisible ? GONE : INVISIBLE);
-                eventLogItem.setVisibility(expanded || !eventLogItemVisible ? GONE : INVISIBLE);
                 otherItem.setVisibility(expanded ? GONE : INVISIBLE);
                 updateStoriesViewBounds(false);
             }
@@ -4097,8 +4081,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             callItem = menu.addItem(call_item, R.drawable.ic_call);
             callItem.setContentDescription(LocaleController.getString(R.string.Call));
         }
-        eventLogItem = menu.addItem(event_log, R.drawable.msg_log);
-        eventLogItem.setContentDescription(getString(R.string.EventLog));
         if (myProfile) {
             editItem = menu.addItem(edit_profile, R.drawable.group_edit_profile);
             editItem.setContentDescription(LocaleController.getString(R.string.Edit));
@@ -7963,7 +7945,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (callToActionItem != null) {
                 //callToActionItem.setIconColor(peerColor != null ? Color.WHITE : getThemedColor(Theme.key_actionBarDefaultIcon));
             }
-            eventLogItem.setIconColor(peerColor != null ? Color.WHITE : getThemedColor(Theme.key_actionBarDefaultIcon));
 
             if (verifiedDrawable[0] != null) {
                 color1 = getThemedColor(Theme.key_profile_verifiedBackground);
@@ -8000,7 +7981,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
             updateEmojiStatusDrawableColor();
 
-            if (avatarsViewPagerIndicatorView.getSecondaryMenuItem() != null && (videoCallItemVisible || editItemVisible || callItemVisible || eventLogItemVisible)) {
+            if (avatarsViewPagerIndicatorView.getSecondaryMenuItem() != null && (videoCallItemVisible || editItemVisible || callItemVisible)) {
                 needLayoutText(calculateHeaderExtraDiff());
             }
         }
@@ -8034,9 +8015,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
             if (editItemVisible) {
                 editItem.setVisibility(View.VISIBLE);
-            }
-            if (eventLogItemVisible) {
-                eventLogItem.setVisibility(View.VISIBLE);
             }
             otherItem.setVisibility(View.VISIBLE);
             if (mediaOptionsItem != null) {
@@ -8072,12 +8050,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         animators.add(ObjectAnimator.ofFloat(videoCallItem, View.ALPHA, visible ? 0.0f : 1.0f));
         animators.add(ObjectAnimator.ofFloat(otherItem, View.ALPHA, visible ? 0.0f : 1.0f));
         animators.add(ObjectAnimator.ofFloat(editItem, View.ALPHA, visible ? 0.0f : 1.0f));
-        animators.add(ObjectAnimator.ofFloat(eventLogItem, View.ALPHA, visible ? 0.0f : 1.0f));
         animators.add(ObjectAnimator.ofFloat(callItem, View.TRANSLATION_Y, visible ? -AndroidUtilities.dp(10) : 0.0f));
         animators.add(ObjectAnimator.ofFloat(videoCallItem, View.TRANSLATION_Y, visible ? -AndroidUtilities.dp(10) : 0.0f));
         animators.add(ObjectAnimator.ofFloat(otherItem, View.TRANSLATION_Y, visible ? -AndroidUtilities.dp(10) : 0.0f));
         animators.add(ObjectAnimator.ofFloat(editItem, View.TRANSLATION_Y, visible ? -AndroidUtilities.dp(10) : 0.0f));
-        animators.add(ObjectAnimator.ofFloat(eventLogItem, View.TRANSLATION_Y, visible ? -AndroidUtilities.dp(10) : 0.0f));
         animators.add(ObjectAnimator.ofFloat(mediaSearchItem, View.ALPHA, visible ? 1.0f : 0.0f));
         animators.add(ObjectAnimator.ofFloat(mediaSearchItem, View.TRANSLATION_Y, visible ? 0.0f : AndroidUtilities.dp(10)));
         animators.add(ObjectAnimator.ofFloat(sharedMediaLayout.photoVideoOptionsItem, View.ALPHA, visible ? 1.0f : 0.0f));
@@ -8115,9 +8091,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                         if (editItemVisible) {
                             editItem.setVisibility(View.GONE);
-                        }
-                        if (eventLogItemVisible) {
-                            eventLogItem.setVisibility(View.GONE);
                         }
                         otherItem.setVisibility(View.GONE);
                     } else {
@@ -9156,9 +9129,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
         int viewWidth = AndroidUtilities.isTablet() ? AndroidUtilities.dp(490) : AndroidUtilities.displaySize.x;
         int extra = 0;
-        if (eventLogItemVisible) {
-            extra += 48;
-        }
         if (editItemVisible) {
             extra += 48;
         }
@@ -10238,10 +10208,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     editItem.setAlpha(0.0f);
                     animators.add(ObjectAnimator.ofFloat(editItem, View.ALPHA, 1.0f));
                 }
-                if (eventLogItemVisible) {
-                    eventLogItem.setAlpha(0.0f);
-                    animators.add(ObjectAnimator.ofFloat(eventLogItem, View.ALPHA, 1.0f));
-                }
                 if (ttlIconView.getTag() != null) {
                     ttlIconView.setAlpha(0f);
                     animators.add(ObjectAnimator.ofFloat(ttlIconView, View.ALPHA, 1.0f));
@@ -10328,10 +10294,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (editItemVisible) {
                     editItem.setAlpha(1.0f);
                     animators.add(ObjectAnimator.ofFloat(editItem, View.ALPHA, 0.0f));
-                }
-                if (eventLogItemVisible) {
-                    eventLogItem.setAlpha(1.0f);
-                    animators.add(ObjectAnimator.ofFloat(eventLogItem, View.ALPHA, 0.0f));
                 }
                 if (ttlIconView != null) {
                     animators.add(ObjectAnimator.ofFloat(ttlIconView, View.ALPHA, ttlIconView.getAlpha(), 0.0f));
@@ -12273,7 +12235,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         otherItem.removeAllSubItems();
         animatingItem = null;
 
-        eventLogItemVisible = false;
         editItemVisible = false;
         callItemVisible = false;
         isCallAvailable = false;
@@ -12643,27 +12604,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     editItem.setVisibility(View.GONE);
                 }
             }
-            if (eventLogItemVisible) {
-                if (eventLogItem.getVisibility() != View.VISIBLE) {
-                    eventLogItem.setVisibility(View.VISIBLE);
-                    if (animated) {
-                        eventLogItem.setAlpha(0);
-                        eventLogItem.animate().alpha(1f).setDuration(150).start();
-                    }
-                }
-            } else {
-                if (eventLogItem.getVisibility() != View.GONE) {
-                    eventLogItem.setVisibility(View.GONE);
-                }
-            }
         }
         if (avatarsViewPagerIndicatorView != null) {
             if (avatarsViewPagerIndicatorView.isIndicatorFullyVisible()) {
-                if (eventLogItemVisible) {
-                    eventLogItem.setVisibility(View.GONE);
-                    eventLogItem.animate().cancel();
-                    eventLogItem.setAlpha(1f);
-                }
                 if (editItemVisible) {
                     editItem.setVisibility(View.GONE);
                     editItem.animate().cancel();
