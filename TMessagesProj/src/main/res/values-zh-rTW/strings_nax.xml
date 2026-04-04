@@ -208,7 +208,6 @@
     <string name="NoCaptionForward">無說明轉發</string>
     <string name="PreferCommonGroupsTab">首選群組標籤</string>
     <string name="PreferCommonGroupsTabNotice">在個人資料頁面自動選擇“群組”標籤而不是“禮物”。</string>
-    <string name="SendHighQualityPhoto">傳送高品質圖片</string>
     <string name="GroupedMessageMenu">分組訊息選單</string>
     <string name="GroupedMessageMenuNotice">將主要操作選項移至訊息選單的底部。</string>
     <string name="CopySticker">複製貼圖</string>

@@ -208,7 +208,6 @@
     <string name="NoCaptionForward">Açıklamasız ilet</string>
     <string name="PreferCommonGroupsTab">Gruplar Sekmesini Tercih Et</string>
     <string name="PreferCommonGroupsTabNotice">Mümkün olduğunda \"Hediyeler\" yerine \"Gruplar\" sekmesini otomatik seçer.</string>
-    <string name="SendHighQualityPhoto">Yüksek Kaliteli Fotoğraf Gönder</string>
     <string name="GroupedMessageMenu">Gruplanmış Mesaj Menüsü</string>
     <string name="GroupedMessageMenuNotice">Gruplama, ana eylemleri mesaj menüsünün altına taşır.</string>
     <string name="CopySticker">Çıkartmayı Kopyala</string>

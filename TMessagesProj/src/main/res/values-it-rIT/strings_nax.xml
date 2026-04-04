@@ -208,7 +208,6 @@
     <string name="NoCaptionForward">NoCaption avanti</string>
     <string name="PreferCommonGroupsTab">Preferisci Scheda Gruppi</string>
     <string name="PreferCommonGroupsTabNotice">Se possibile, seleziona automaticamente la scheda \"Gruppi\" anziché \"Regali\".</string>
-    <string name="SendHighQualityPhoto">Invia foto in alta qualità</string>
     <string name="GroupedMessageMenu">Menu Messaggio Di Gruppo</string>
     <string name="GroupedMessageMenuNotice">Il raggruppamento sposta le azioni principali in fondo al menu dei messaggi.</string>
     <string name="CopySticker">Copia sticker</string>

@@ -208,7 +208,6 @@
     <string name="NoCaptionForward">Encaminhar sem legenda</string>
     <string name="PreferCommonGroupsTab">Preferir aba Grupos</string>
     <string name="PreferCommonGroupsTabNotice">Seleciona automaticamente a aba \"Grupos\" em vez de \"Presentes\" sempre que possível.</string>
-    <string name="SendHighQualityPhoto">Enviar foto em alta qualidade</string>
     <string name="GroupedMessageMenu">Menu de mensagens agrupado</string>
     <string name="GroupedMessageMenuNotice">O agrupamento move as ações principais para a parte inferior do menu.</string>
     <string name="CopySticker">Copiar Sticker</string>

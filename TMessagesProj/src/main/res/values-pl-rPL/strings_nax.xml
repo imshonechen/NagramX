@@ -208,7 +208,6 @@
     <string name="NoCaptionForward">Brak napisów do przodu</string>
     <string name="PreferCommonGroupsTab">Karta Preferuj grupy</string>
     <string name="PreferCommonGroupsTabNotice">Automatycznie-wybieraj zakładkę „Grupy” zamiast „Prezenty”</string>
-    <string name="SendHighQualityPhoto">Wyślij zdjęcie wysokiej jakości</string>
     <string name="GroupedMessageMenu">Menu wiadomości grupowych</string>
     <string name="GroupedMessageMenuNotice">Grupowanie przenosi główne akcje na dół menu wiadomości.</string>
     <string name="CopySticker">Kopiuj naklejkę</string>

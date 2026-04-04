@@ -182,7 +182,6 @@
     <string name="NoCaptionForward">ارسال بدون زیرنویس</string>
     <string name="PreferCommonGroupsTab">ترجیح تب گروه‌ها</string>
     <string name="PreferCommonGroupsTabNotice">انتخاب خودکار تب \"گروه‌ها\" به جای \"هدایا\" در صورت امکان.</string>
-    <string name="SendHighQualityPhoto">ارسال عکس با کیفیت بالا</string>
     <string name="GroupedMessageMenu">منوی پیام‌های گروهی</string>
     <string name="GroupedMessageMenuNotice">گروه‌بندی، اقدامات اصلی را به پایین منوی پیام منتقل می‌کند.</string>
     <string name="CopySticker">کپی کردن استیکر</string>
