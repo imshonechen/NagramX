@@ -81,10 +81,6 @@
     <string name="MessageSavingSaveMediaInPublicGroups">… en Grupos Públicos</string>
     <string name="MessageSavingSaveMediaInPrivateGroups">… en grupos privados</string>
     <string name="TelegramUIAutoTranslate">Traducir Chats completos</string>
-    <string name="TranslatorMode">Comportamiento de traducción manual</string>
-    <string name="TranslatorModeAppend">Adjuntar</string>
-    <string name="TranslatorModeInline">Reemplazar</string>
-    <string name="TranslatorModePopup">Ventana emergente</string>
     <string name="Translated">traducido</string>
     <string name="ProviderRealMicrosoftTranslator">Traductor de Microsoft</string>
     <string name="TranslatorSettings">Traductor</string>

@@ -81,10 +81,6 @@
     <string name="MessageSavingSaveMediaInPublicGroups">… в публичных группах</string>
     <string name="MessageSavingSaveMediaInPrivateGroups">… в частных группах</string>
     <string name="TelegramUIAutoTranslate">Переводить чаты целиком</string>
-    <string name="TranslatorMode">Поведение при ручном переводе</string>
-    <string name="TranslatorModeAppend">Добавлять</string>
-    <string name="TranslatorModeInline">Заменять</string>
-    <string name="TranslatorModePopup">Всплывающее окно</string>
     <string name="Translated">переведено</string>
     <string name="ProviderRealMicrosoftTranslator">Microsoft</string>
     <string name="TranslatorSettings">Переводчик</string>
@@ -324,4 +320,12 @@
     <string name="StickerCopied">Стикер скопирован в буфер обмена.</string>
     <string name="StrokeOnViews">Эффекты бликов</string>
     <string name="HideBottomNavigationBar">Скрыть нижнюю панель навигации</string>
+    <string name="TranslatorMode">С исходным текстом</string>
+    <string name="TranslatorWithOriginalTextOff">Выкл</string>
+    <string name="TranslatorWithOriginalTextManualOnly">Только вручную</string>
+    <string name="TranslatorWithOriginalTextOn">Вкл</string>
+    <string name="CenterActionBarTitleOn">Вкл</string>
+    <string name="CenterActionBarTitleOff">Выкл</string>
+    <string name="TabletModeOn">Вкл</string>
+    <string name="TabletModeOff">Выкл</string>
 </resources>

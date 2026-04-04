@@ -81,10 +81,6 @@
     <string name="MessageSavingSaveMediaInPublicGroups">公开群组</string>
     <string name="MessageSavingSaveMediaInPrivateGroups">私有群组</string>
     <string name="TelegramUIAutoTranslate">自动翻译</string>
-    <string name="TranslatorMode">手动翻译显示类型</string>
-    <string name="TranslatorModeAppend">追加</string>
-    <string name="TranslatorModeInline">替换</string>
-    <string name="TranslatorModePopup">弹窗</string>
     <string name="Translated">已翻译</string>
     <string name="ProviderRealMicrosoftTranslator">微软翻译</string>
     <string name="TranslatorSettings">翻译</string>

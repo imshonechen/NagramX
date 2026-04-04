@@ -94,10 +94,6 @@
     <string name="MessageSavingSaveMediaInPublicGroups">… in Public Groups</string>
     <string name="MessageSavingSaveMediaInPrivateGroups">… in Private Groups</string>
     <string name="TelegramUIAutoTranslate">Translate Entire Chats</string>
-    <string name="TranslatorMode">With Original Text</string>
-    <string name="TranslatorModeAppend">Append</string>
-    <string name="TranslatorModeInline">Replace</string>
-    <string name="TranslatorModePopup">Pop-up</string>
     <string name="Translated">translated</string>
     <string name="ProviderRealMicrosoftTranslator">Microsoft Translator</string>
     <string name="TranslatorSettings">Translator</string>
@@ -146,7 +142,7 @@
     <string name="DisableGhostMode">Disable Ghost</string>
     <string name="GhostModeEnabled">Ghost mode turned on</string>
     <string name="GhostModeDisabled">Ghost mode turned off</string>
-    <string name="GhostModeInDrawer">Shortcut</string>
+    <string name="GhostModeInDrawer">Shortcuts</string>
     <string name="GhostModeStatusIndicator">Ghost Mode Indicator</string>
     <string name="DontSendReadMessagePackets">Don\'t Read Messages</string>
     <string name="DontReadStoriesPackets">Don\'t Read Stories</string>
@@ -338,7 +334,12 @@
     <string name="StickerCopied">Sticker copied to clipboard.</string>
     <string name="StrokeOnViews">Glare effects</string>
     <string name="HideBottomNavigationBar">Hide Bottom Navigation Bar</string>
+    <string name="TranslatorMode">With Original Text</string>
     <string name="TranslatorWithOriginalTextOff">Off</string>
     <string name="TranslatorWithOriginalTextManualOnly">Manual Only</string>
     <string name="TranslatorWithOriginalTextOn">On</string>
+    <string name="CenterActionBarTitleOn">On</string>
+    <string name="CenterActionBarTitleOff">Off</string>
+    <string name="TabletModeOn">On</string>
+    <string name="TabletModeOff">Off</string>
 </resources>

@@ -81,10 +81,6 @@
     <string name="MessageSavingSaveMediaInPublicGroups">… у публічних групах</string>
     <string name="MessageSavingSaveMediaInPrivateGroups">… у приватних групах</string>
     <string name="TelegramUIAutoTranslate">Перекласти весь чат</string>
-    <string name="TranslatorMode">Режим ручного перекладу</string>
-    <string name="TranslatorModeAppend">Додати</string>
-    <string name="TranslatorModeInline">Замінити</string>
-    <string name="TranslatorModePopup">Спливаюче вікно</string>
     <string name="Translated">перекладено</string>
     <string name="ProviderRealMicrosoftTranslator">Перекладач Microsoft</string>
     <string name="TranslatorSettings">Перекладач</string>

@@ -80,7 +80,7 @@
     <string name="AutoPauseVideo">Pausa automatica del video</string>
     <string name="AutoPauseVideoAbout">Quando si blocca lo schermo/si passa allo sfondo.</string>
     <string name="DisableProximityEvents">Disabilita eventi di prossimità</string>
-    <string name="SelectBetween">Seleziona intervallo</string>
+    <string name="SelectBetween">Seleziona messaggi</string>
     <string name="ProviderDeepLTranslate">Traduttore DeepL</string>
     <string name="ProviderMicrosoftTranslator">Traduttore Bing</string>
     <string name="DontSendGreetingSticker">Non inviare adesivi di saluto</string>
