@@ -202,7 +202,7 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
         disableScroll = b;
     }
 
-    private ValueAnimator keyboardContentAnimator;
+    public ValueAnimator keyboardContentAnimator;
     public boolean smoothKeyboardAnimationEnabled;
     public boolean smoothKeyboardByBottom;
     private boolean openNoDelay;
@@ -1586,14 +1586,15 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
     }
 
     protected boolean isTouchOutside(float x, float y) {
-        if (topBulletinContainer != null) {
-            float left = topBulletinContainer.getX();
-            float top = topBulletinContainer.getY();
-            float right = left + topBulletinContainer.getWidth();
-            float bottom = top + topBulletinContainer.getHeight();
-            if (x >= left && x <= right && y >= top && y <= bottom) {
+        if (topBulletinContainer != null && topBulletinContainer.getChildCount() > 0) {
+            View bulletinLayout = topBulletinContainer.getChildAt(0);
+            if (
+                y >= topBulletinContainer.getY() + bulletinLayout.getY() &&
+                y <= topBulletinContainer.getY() + bulletinLayout.getY() + bulletinLayout.getHeight() &&
+                x >= topBulletinContainer.getX() + bulletinLayout.getX() &&
+                x <= topBulletinContainer.getX() + bulletinLayout.getX() + bulletinLayout.getWidth()
+            )
                 return false;
-            }
         }
         return y < containerView.getTop() || x < containerView.getLeft() || x > containerView.getRight();
     }
@@ -1739,8 +1740,9 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
         return tag;
     }
 
-    public void setDimBehind(boolean value) {
+    public BottomSheet setDimBehind(boolean value) {
         dimBehind = value;
+        return this;
     }
 
     public void setDimBehindAlpha(int value) {
