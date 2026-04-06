@@ -125,6 +125,24 @@ jobs:
           name: NagramX-${{ steps.upstream.outputs.tag }}
           path: source/${{ steps.build.outputs.apk }}
 
+      - name: Create GitHub Release and upload APK
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.upstream.outputs.tag }}
+          APK_PATH: ${{ steps.build.outputs.apk }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK_PATH" --clobber
+          else
+            gh release create "$TAG" "$APK_PATH" \
+              --title "NagramX $TAG" \
+              --notes "Auto-built from upstream stable release $TAG."
+          fi
+
       - name: Save last built tag
         if: steps.upstream.outputs.tag != steps.state.outputs.last
         run: |
