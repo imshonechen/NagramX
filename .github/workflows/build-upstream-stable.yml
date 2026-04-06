@@ -84,7 +84,6 @@ jobs:
           set -euo pipefail
 
           printf '%s' "$LOCAL_PROPERTIES_B64" | base64 -d > local.properties
-          echo "sdk.dir=${ANDROID_HOME}" >> local.properties
 
           printf '%s' "$RELEASE_KEYSTORE_B64" | base64 -d > TMessagesProj/release.keystore
 
