@@ -419,7 +419,9 @@ public class PrivacyUsersActivity extends BaseFragment implements NotificationCe
         blockedChannelsDetailRow = -1;
         deleteAllRow = -1;
         if (!blockedUsersActivity || getMessagesController().totalBlockedCount >= 0) {
-            blockUserRow = rowCount++;
+            if (currentType != TYPE_BLOCKED_CHANNELS) {
+                blockUserRow = rowCount++;
+            }
             if (currentType == TYPE_BLOCKED_CHANNELS) {
                 blockUserRow = -1;
             } else if (currentType == TYPE_BLOCKED) {
