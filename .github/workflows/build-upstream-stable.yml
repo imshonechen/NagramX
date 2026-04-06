@@ -82,14 +82,14 @@ jobs:
           GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
         run: |
           set -euo pipefail
-      
+
           printf '%s' "$LOCAL_PROPERTIES_B64" | base64 -d > local.properties
-      
+          
           printf '\n' >> local.properties
           echo "sdk.dir=${ANDROID_HOME}" >> local.properties
-      
+
           printf '%s' "$RELEASE_KEYSTORE_B64" | base64 -d > TMessagesProj/release.keystore
-      
+
           if [ -n "${GOOGLE_SERVICES_JSON_B64:-}" ]; then
             printf '%s' "$GOOGLE_SERVICES_JSON_B64" | base64 -d > TMessagesProj/google-services.json
           fi
@@ -117,13 +117,6 @@ jobs:
           apk="$(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk' | head -n 1)"
           test -n "$apk"
           echo "apk=$apk" >> "$GITHUB_OUTPUT"
-
-      - name: Upload artifact
-        if: steps.upstream.outputs.tag != steps.state.outputs.last
-        uses: actions/upload-artifact@v4
-        with:
-          name: NagramX-${{ steps.upstream.outputs.tag }}
-          path: source/${{ steps.build.outputs.apk }}
 
       - name: Create GitHub Release and upload APK
         if: steps.upstream.outputs.tag != steps.state.outputs.last
