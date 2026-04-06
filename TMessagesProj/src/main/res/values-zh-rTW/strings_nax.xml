@@ -320,4 +320,12 @@
     <string name="StickerCopied">貼圖已複製到剪貼簿</string>
     <string name="StrokeOnViews">眩光效果</string>
     <string name="HideBottomNavigationBar">隱藏底部導覽列</string>
+    <string name="TranslatorMode">追加</string>
+    <string name="TranslatorWithOriginalTextOff">關閉</string>
+    <string name="TranslatorWithOriginalTextManualOnly">手動</string>
+    <string name="TranslatorWithOriginalTextOn">開啟</string>
+    <string name="CenterActionBarTitleOn">開啟</string>
+    <string name="CenterActionBarTitleOff">關閉</string>
+    <string name="TabletModeOn">開啟</string>
+    <string name="TabletModeOff">關閉</string>
 </resources>

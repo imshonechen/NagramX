@@ -109,7 +109,7 @@
     <string name="ResetSettings">重置设置</string>
     <string name="ResetSettingsAlert">您确定要重置所有 N-设置 吗？</string>
     <string name="DontAutoPlayNextVoice">禁用自动播放下一条语音消息</string>
-    <string name="SaveToChatSubfolder">按聊天名称保存附件</string>
+    <string name="SaveToChatSubfolder">按对话名称保存附件</string>
     <string name="MessageColoredBackground">多彩消息背景</string>
     <string name="ColoredBackgroundNotice">回复，引用，链接预览的背景色和 Emoji。</string>
     <string name="ChatMenu">聊天菜单</string>
@@ -121,7 +121,7 @@
     <string name="DoubleTapIncoming">收到的消息</string>
     <string name="DoubleTapOutgoing">发送的消息</string>
     <string name="TgBrowserOpenFail">应用内浏览器不可用</string>
-    <string name="TgBrowserOpenFail_Desc">由于应用内浏览器已被禁用，所选操作不可用。</string>
+    <string name="TgBrowserOpenFail_Desc">因为应用内浏览器已被禁用，此操作不可用。</string>
     <string name="MapPreviewProviderYandexNax">Yandex</string>
     <string name="GhostMode">幽灵模式</string>
     <string name="GhostEssentialsHeader">幽灵选项</string>
@@ -320,4 +320,12 @@
     <string name="StickerCopied">贴纸已复制到剪贴板。</string>
     <string name="StrokeOnViews">眩光效果</string>
     <string name="HideBottomNavigationBar">隐藏底部导航栏</string>
+    <string name="TranslatorMode">追加原文</string>
+    <string name="TranslatorWithOriginalTextOff">关闭</string>
+    <string name="TranslatorWithOriginalTextManualOnly">手动</string>
+    <string name="TranslatorWithOriginalTextOn">启用</string>
+    <string name="CenterActionBarTitleOn">打开</string>
+    <string name="CenterActionBarTitleOff">关闭</string>
+    <string name="TabletModeOn">启用</string>
+    <string name="TabletModeOff">禁用</string>
 </resources>
