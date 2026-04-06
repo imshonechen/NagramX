@@ -2,7 +2,7 @@ name: Build upstream stable only
 
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "44 8,20 * * *"
   workflow_dispatch:
 
 permissions:
