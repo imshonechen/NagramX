@@ -1,0 +1,138 @@
+name: Build upstream stable only
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nagramx-upstream-stable
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout my fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest upstream stable release tag
+        id: upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="$(gh api repos/risin42/NagramX/releases/latest --jq .tag_name)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Latest upstream stable tag: $tag"
+
+      - name: Read last built tag
+        id: state
+        run: |
+          set -euo pipefail
+          last=""
+          if [ -f .github/last-stable-tag ]; then
+            last="$(tr -d '\r\n' < .github/last-stable-tag)"
+          fi
+          echo "last=$last" >> "$GITHUB_OUTPUT"
+          echo "Last built tag: ${last:-<none>}"
+
+      - name: Stop if no new stable release
+        if: steps.upstream.outputs.tag == steps.state.outputs.last
+        run: echo "No new stable release. Skip build."
+
+      - name: Checkout upstream stable tag source
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        uses: actions/checkout@v4
+        with:
+          repository: risin42/NagramX
+          ref: refs/tags/${{ steps.upstream.outputs.tag }}
+          path: source
+          fetch-depth: 1
+
+      - name: Set up JDK 21
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "build-tools;36.0.0 ndk;27.2.12479018 platforms;android-36"
+
+      - name: Restore build files
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        working-directory: source
+        env:
+          LOCAL_PROPERTIES_B64: ${{ secrets.LOCAL_PROPERTIES }}
+          RELEASE_KEYSTORE_B64: ${{ secrets.RELEASE_KEYSTORE_B64 }}
+          GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          set -euo pipefail
+
+          printf '%s' "$LOCAL_PROPERTIES_B64" | base64 -d > local.properties
+          echo "sdk.dir=${ANDROID_HOME}" >> local.properties
+
+          printf '%s' "$RELEASE_KEYSTORE_B64" | base64 -d > TMessagesProj/release.keystore
+
+          if [ -n "${GOOGLE_SERVICES_JSON_B64:-}" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON_B64" | base64 -d > TMessagesProj/google-services.json
+          fi
+
+      - name: Tune Gradle memory
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        working-directory: source
+        run: |
+          set -euo pipefail
+          MEMORY_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+          MEMORY_GB=$((MEMORY_KB / 1024 / 1024))
+
+          if [ "$MEMORY_GB" -ge 12 ]; then
+            sed -i '/^org\.gradle\.jvmargs=/d' gradle.properties
+            echo "org.gradle.jvmargs=-Xmx8G -XX:MaxMetaspaceSize=2G -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> gradle.properties
+          fi
+
+      - name: Build release APK
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        id: build
+        working-directory: source
+        run: |
+          set -euo pipefail
+          ./gradlew TMessagesProj:assembleRelease
+          apk="$(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk' | head -n 1)"
+          test -n "$apk"
+          echo "apk=$apk" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        uses: actions/upload-artifact@v4
+        with:
+          name: NagramX-${{ steps.upstream.outputs.tag }}
+          path: source/${{ steps.build.outputs.apk }}
+
+      - name: Save last built tag
+        if: steps.upstream.outputs.tag != steps.state.outputs.last
+        run: |
+          set -euo pipefail
+          mkdir -p .github
+          printf '%s\n' "${{ steps.upstream.outputs.tag }}" > .github/last-stable-tag
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .github/last-stable-tag
+          git commit -m "state: built upstream stable ${{ steps.upstream.outputs.tag }}" || exit 0
+          git push
